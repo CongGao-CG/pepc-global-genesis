@@ -68,6 +68,53 @@ Predict tropical cyclone genesis.
 **Raises:**
 - `ValueError`: If basin is invalid or input array shapes don't match
 
+### `predict_genesis_global(av850, shr, rh600, pi)`
+
+Predict tropical cyclone genesis globally across all basins on a 2.5-degree grid.
+
+This function automatically assigns each grid cell to the appropriate basin, applies an ocean mask to exclude land points, and handles the ENP/NA overlap region. Longitudes in -180..180 are converted to 0..360 internally.
+
+**Parameters:**
+- `av850` (xr.DataArray): Absolute vorticity at 850 hPa (s^-1)
+- `shr` (xr.DataArray): Vertical wind shear between 200-850 hPa (m/s)
+- `rh600` (xr.DataArray): Relative humidity at 600 hPa (%)
+- `pi` (xr.DataArray): Potential intensity (m/s)
+
+All inputs must share the same dimensions and be on a 2.5-degree global grid (lon: 0, 2.5, ..., 357.5; lat: 90 to -90 or -90 to 90). Extra dimensions (e.g., time) are supported.
+
+**Returns:**
+- `xr.Dataset` with two variables:
+  - **genesis** (float): 1 = genesis, 0 = no genesis, NaN = not predicted (land or outside all basins)
+  - **basin** (str): cell classification — one of the 7 basin names (`'AS'`, `'BoB'`, `'WNP'`, `'ENP'`, `'NA'`, `'SI'`, `'SP'`), `'ocean_outside'` (ocean but outside all basins), `'land_outside'` (land outside all basins), or `'land_inside'` (land inside a basin's lat/lon range)
+
+**Raises:**
+- `ValueError`: If lat/lon dimensions cannot be detected or coordinates are not on the expected 2.5-degree grid
+
+**Example:**
+
+```python
+import numpy as np
+import xarray as xr
+from pepc_global_genesis import predict_genesis_global
+
+# Create 2.5-degree global grid
+lon = np.arange(0, 360, 2.5)
+lat = np.arange(90, -90.1, -2.5)
+time = np.arange(12)
+
+# Create predictor DataArrays (time x lat x lon)
+dims = ['time', 'lat', 'lon']
+coords = {'time': time, 'lat': lat, 'lon': lon}
+av850 = xr.DataArray(np.random.uniform(-1e-4, 1e-4, (12, 73, 144)), dims=dims, coords=coords)
+shr = xr.DataArray(np.random.uniform(0, 20, (12, 73, 144)), dims=dims, coords=coords)
+rh600 = xr.DataArray(np.random.uniform(30, 80, (12, 73, 144)), dims=dims, coords=coords)
+pi = xr.DataArray(np.random.uniform(0, 100, (12, 73, 144)), dims=dims, coords=coords)
+
+# Predict genesis globally
+result = predict_genesis_global(av850, shr, rh600, pi)
+print(result)  # Dataset with 'genesis' and 'basin' variables
+```
+
 ### `get_basin_names()`
 
 Get the list of valid basin names.
