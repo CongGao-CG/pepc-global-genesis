@@ -56,10 +56,10 @@ print(f"Predicted genesis: {np.sum(genesis_flag)} grid points")
 Predict tropical cyclone genesis.
 
 **Parameters:**
-- `av850` (np.ndarray): Absolute vorticity at 850 hPa (s^-1)
-- `shr` (np.ndarray): Vertical wind shear between 200-850 hPa (m/s)
+- `av850` (np.ndarray): Absolute vorticity at 850 hPa (s^−1)
+- `shr` (np.ndarray): Vertical wind shear between 200 hPa and 850 hPa (m s^−1)
 - `rh600` (np.ndarray): Relative humidity at 600 hPa (%)
-- `pi` (np.ndarray): Potential intensity (m/s)
+- `pi` (np.ndarray): Potential intensity (m s^−1)
 - `basin` (str): Basin name (one of: 'AS', 'BoB', 'WNP', 'ENP', 'NA', 'SI', 'SP')
 
 **Returns:**
@@ -70,17 +70,17 @@ Predict tropical cyclone genesis.
 
 ### `predict_genesis_global(av850, shr, rh600, pi)`
 
-Predict tropical cyclone genesis globally across all basins on a 2.5-degree grid.
+Predict tropical cyclone genesis globally across all basins on a 2.5° grid.
 
-This function automatically assigns each grid cell to the appropriate basin, applies an ocean mask to exclude land points, and handles the ENP/NA overlap region. Longitudes in -180..180 are converted to 0..360 internally.
+This function automatically assigns each grid cell to the appropriate basin, applies an ocean mask to exclude land points, and handles the ENP/NA overlap region. Longitudes in −180 to 180 are converted to 0 to 360 internally.
 
 **Parameters:**
-- `av850` (xr.DataArray): Absolute vorticity at 850 hPa (s^-1)
-- `shr` (xr.DataArray): Vertical wind shear between 200-850 hPa (m/s)
+- `av850` (xr.DataArray): Absolute vorticity at 850 hPa (s^−1)
+- `shr` (xr.DataArray): Vertical wind shear between 200 hPa and 850 hPa (m s^−1)
 - `rh600` (xr.DataArray): Relative humidity at 600 hPa (%)
-- `pi` (xr.DataArray): Potential intensity (m/s)
+- `pi` (xr.DataArray): Potential intensity (m s^−1)
 
-All inputs must share the same dimensions and be on a 2.5-degree global grid (lon: 0, 2.5, ..., 357.5; lat: 90 to -90 or -90 to 90). Extra dimensions (e.g., time) are supported.
+All inputs must share the same dimensions and be on a 2.5° global grid (lon: 0, 2.5, ..., 357.5; lat: 90 to −90 or −90 to 90). Extra dimensions (e.g., time) are supported.
 
 **Returns:**
 - `xr.Dataset` with two variables:
@@ -88,7 +88,7 @@ All inputs must share the same dimensions and be on a 2.5-degree global grid (lo
   - **basin** (str): cell classification — one of the 7 basin names (`'AS'`, `'BoB'`, `'WNP'`, `'ENP'`, `'NA'`, `'SI'`, `'SP'`), `'ocean_outside'` (ocean but outside all basins), `'land_outside'` (land outside all basins), or `'land_inside'` (land inside a basin's lat/lon range)
 
 **Raises:**
-- `ValueError`: If lat/lon dimensions cannot be detected or coordinates are not on the expected 2.5-degree grid
+- `ValueError`: If lat/lon dimensions cannot be detected or coordinates are not on the expected 2.5° grid
 
 **Example:**
 
@@ -97,7 +97,7 @@ import numpy as np
 import xarray as xr
 from pepc_global_genesis import predict_genesis_global
 
-# Create 2.5-degree global grid
+# Create 2.5° global grid
 lon = np.arange(0, 360, 2.5)
 lat = np.arange(90, -90.1, -2.5)
 time = np.arange(12)
@@ -130,10 +130,10 @@ List of valid basin names.
 
 | Variable | Description                          | Typical Units |
 |----------|--------------------------------------|---------------|
-| av850    | Absolute vorticity at 850 hPa        | s^-1          |
-| shr      | Vertical wind shear between 200 hPa and 850 hPa | m s^-1        |
+| av850    | Absolute vorticity at 850 hPa        | s^−1          |
+| shr      | Vertical wind shear between 200 hPa and 850 hPa | m s^−1        |
 | rh600    | Relative humidity at 600 hPa         | %             |
-| pi       | Potential intensity                  | m s^-1        |
+| pi       | Potential intensity                  | m s^−1        |
 
 ## Model Details
 
