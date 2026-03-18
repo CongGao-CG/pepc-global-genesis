@@ -9,7 +9,7 @@ from .basins import BASINS, BASIN_GENESIS_RANGES, get_basin_names
 from ._core import predict_genesis
 from .global_predict import predict_genesis_global
 
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 __all__ = [
     "predict_genesis",
     "predict_genesis_global",
