@@ -1,6 +1,6 @@
 # PepC-Global Genesis
 
-A Python package for predicting tropical cyclone genesis using trained Support Vector Classification (SVC) models.
+A Python package for predicting tropical cyclone genesis using pre-trained Support Vector Classification (SVC) models.
 
 ## Installation
 
@@ -137,14 +137,14 @@ List of valid basin names.
 
 ## Model Details
 
-This package contains pre-trained SVC models for 7 tropical cyclone basins. The models were trained on ERA5 monthly data using four environmental predictors known to influence tropical cyclone genesis:
+This package contains pre-trained SVC models for 7 tropical cyclone basins. The models were pre-trained on ERA5 monthly data using four environmental predictors known to influence tropical cyclone genesis:
 
 1. **Absolute vorticity (av850)**: Measures rotation in the lower-level atmosphere
 2. **Wind shear (shr)**: Vector difference between upper-level and lower-level winds
 3. **Relative humidity (rh600)**: Mid-level moisture
 4. **Potential intensity (pi)**: Upper limit of tropical cyclone intensity
 
-Each basin has its own trained model and scaling parameters stored within the package.
+Each basin has its own pre-trained model and scaling parameters stored within the package.
 
 ## License
 
